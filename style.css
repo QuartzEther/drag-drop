@@ -1,0 +1,63 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    background-color: #2c3e50;
+
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+
+.drag-list {
+    display: flex;
+    flex-direction:column;
+    width: 300px;
+    margin: 150px auto;
+    position: relative;
+}
+
+
+
+.drag-item {
+    position: relative;
+    font-family: Helvetica;
+    height: 30px;
+    margin: 10px 10px 0 10px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,.03);
+    border-radius: 3px;
+    background-color: #ecf0f1;
+    
+}
+
+
+
+.animation-up {
+    animation: .4s upAnimate forwards;
+}
+
+@keyframes upAnimate {
+    0% {
+        transform: translateY(120%);
+    }
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+
+.animation-down {
+    animation: .4s downAnimate forwards;
+}
+
+@keyframes downAnimate {
+    0% {
+        transform: translateY(-120%);
+    }
+    100% {
+        transform: translateY(0%);
+    }
+}
