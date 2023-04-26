@@ -1,12 +1,14 @@
-const items = document.querySelectorAll(".drag-item")
+const items = document.querySelectorAll(".drag-item__txt")
 const containers = document.querySelectorAll(".drag-list")
+
+const container = document.querySelector(".drag-list")
 
 for (let item of items){
     let margin =  item.getBoundingClientRect().y; //закрепление позиции item сверху
     item.onmousedown = function(event) { //отследить нажатие
 
         item.style.position = 'relative';
-        //item.style.zIndex = 1000;
+        item.style.zIndex = 1000;
 
         moveAt(event.pageY);
 
@@ -17,6 +19,24 @@ for (let item of items){
 
         function onMouseMove(event) {
             moveAt(event.pageY);
+
+            let thisEl = item.parentElement;
+
+            let prevEl = thisEl.previousElementSibling;
+            let nextEl = thisEl.nextElementSibling;
+
+            //перемещение item
+
+            //перемещение вниз
+            if (nextEl && item.getBoundingClientRect().y > nextEl.children[0].getBoundingClientRect().y){
+                container.insertBefore(nextEl, thisEl);
+                item.style.top = 0;
+                margin = item.getBoundingClientRect().y;
+            } else if (prevEl && item.getBoundingClientRect().y < prevEl.children[0].getBoundingClientRect().y){
+                container.insertBefore(thisEl, prevEl);
+                item.style.top = 0;
+                margin = item.getBoundingClientRect().y;
+            }
         }
 
         // перемещать по экрану
