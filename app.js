@@ -1,4 +1,4 @@
-const items = document.querySelectorAll(".drag-item__txt")
+const items = document.querySelectorAll(".drag-item")
 const containers = document.querySelectorAll(".drag-list")
 
 const container = document.querySelector(".drag-list")
@@ -6,6 +6,10 @@ const container = document.querySelector(".drag-list")
 for (let item of items){
     let margin =  item.getBoundingClientRect().y; //закрепление позиции item сверху
     item.onmousedown = function(event) { //отследить нажатие
+
+        margin =  item.getBoundingClientRect().y; //закрепление позиции item сверху
+        item.style.transition = 'none'
+
 
         item.style.position = 'relative';
         item.style.zIndex = 1000;
@@ -20,7 +24,7 @@ for (let item of items){
         function onMouseMove(event) {
             moveAt(event.pageY);
 
-            let thisEl = item.parentElement;
+            let thisEl = item;
 
             let prevEl = thisEl.previousElementSibling;
             let nextEl = thisEl.nextElementSibling;
@@ -28,14 +32,20 @@ for (let item of items){
             //перемещение item
 
             //перемещение вниз
-            if (nextEl && item.getBoundingClientRect().y > nextEl.children[0].getBoundingClientRect().y){
+            if (nextEl && item.getBoundingClientRect().y > nextEl.getBoundingClientRect().y){
                 container.insertBefore(nextEl, thisEl);
+
                 item.style.top = 0;
                 margin = item.getBoundingClientRect().y;
-            } else if (prevEl && item.getBoundingClientRect().y < prevEl.children[0].getBoundingClientRect().y){
+
+
+            } else if (prevEl && item.getBoundingClientRect().y < prevEl.getBoundingClientRect().y){
                 container.insertBefore(thisEl, prevEl);
+
                 item.style.top = 0;
                 margin = item.getBoundingClientRect().y;
+
+
             }
         }
 
@@ -46,6 +56,8 @@ for (let item of items){
         document.onmouseup = function() {
             document.removeEventListener('mousemove', onMouseMove);
             item.onmouseup = null;
+            item.style.transition = 'all .3s ease'
+            item.style.top = 0;
         };
 
         //зануление обычного d&d
