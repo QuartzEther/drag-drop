@@ -35,12 +35,22 @@ for (let item of items){
             if (nextEl && item.getBoundingClientRect().y > nextEl.getBoundingClientRect().y){
                 container.insertBefore(nextEl, thisEl);
 
+                nextEl.classList.add('animation-up');
+                nextEl.addEventListener("animationend", () =>{
+                    nextEl.classList.remove('animation-up')
+                }, false);
+
                 item.style.top = 0;
                 margin = item.getBoundingClientRect().y;
 
 
             } else if (prevEl && item.getBoundingClientRect().y < prevEl.getBoundingClientRect().y){
                 container.insertBefore(thisEl, prevEl);
+
+                prevEl.classList.add('animation-down')
+                prevEl.addEventListener("animationend", () =>{
+                    prevEl.classList.remove('animation-down')
+                }, false);
 
                 item.style.top = 0;
                 margin = item.getBoundingClientRect().y;
