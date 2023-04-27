@@ -1,15 +1,27 @@
-const items = document.querySelectorAll(".drag-item")
-//const containers = document.querySelectorAll(".drag-list")
+const containers = document.querySelectorAll(".drag-list")
 
-const container = document.querySelector(".drag-list")
+const items = document.querySelectorAll(".drag-item")
 
 for (let item of items){
+    let container = item.parentElement;
+
+    let prevContainer = null;
+    let nextContainer = null;
+
+    if (containers.length > 1){
+        if (container.nextElementSibling && container.nextElementSibling.classList.contains('drag-list')){
+            nextContainer = container.nextElementSibling;
+        }
+        if (container.previousElementSibling && container.previousElementSibling.classList.contains('drag-list')){
+            prevContainer = container.previousElementSibling;
+        }
+    }
+
     let margin =  item.getBoundingClientRect().y; //закрепление позиции item сверху
     item.onmousedown = function(event) { //отследить нажатие
 
         margin =  item.getBoundingClientRect().y; //закрепление позиции item сверху
         item.style.transition = 'none'
-
 
         item.style.position = 'relative';
         item.style.zIndex = 1000;
@@ -44,7 +56,7 @@ for (let item of items){
                 margin = item.getBoundingClientRect().y;
 
 
-            } else if (prevEl && item.getBoundingClientRect().y < prevEl.getBoundingClientRect().y){
+            } else if (prevEl && item.getBoundingClientRect().y < prevEl.getBoundingClientRect().y){ //вверх
                 container.insertBefore(thisEl, prevEl);
 
                 prevEl.classList.add('animation-down')
@@ -55,7 +67,23 @@ for (let item of items){
                 item.style.top = 0;
                 margin = item.getBoundingClientRect().y;
 
+            } else if (nextContainer
+                && (item.getBoundingClientRect().bottom) > nextContainer.getBoundingClientRect().y){ //в нижний контейнер
+                nextContainer.prepend(item);
 
+                prevContainer = container;
+                container = nextContainer;
+                nextContainer = (container.nextElementSibling && container.nextElementSibling.classList.contains('drag-list')) ?
+                    container.nextElementSibling : null;
+
+            } else if (prevContainer
+                && item.getBoundingClientRect().y < prevContainer.getBoundingClientRect().bottom){ //в верхний контейнер
+                prevContainer.appendChild(item);
+
+                nextContainer = container;
+                container = prevContainer;
+                prevContainer = (container.previousElementSibling && container.previousElementSibling.classList.contains('drag-list')) ?
+                    container.previousElementSibling : null;
             }
         }
 
@@ -68,6 +96,8 @@ for (let item of items){
             item.onmouseup = null;
             item.style.transition = 'all .3s ease'
             item.style.top = 0;
+
+            console.log(container.id);
         };
 
         //зануление обычного d&d

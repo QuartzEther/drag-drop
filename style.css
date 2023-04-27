@@ -15,10 +15,17 @@ body {
     flex-direction:column;
     width: 300px;
     margin: 150px auto;
+    margin-bottom: 30px;
     position: relative;
+
+    /*//background-color: cornflowerblue;*/
+    /*//padding: 30px 0;*/
 }
 
-
+.drag-list_pink {
+    margin: 150px auto;
+    margin-top: 0;
+}
 
 .drag-item{
     position: relative;
@@ -31,6 +38,11 @@ body {
     border-radius: 3px;
     background-color: #ecf0f1;
 }
+
+.drag-list_pink > .drag-item {
+    background-color: #ffc4ff;
+}
+
 
 
 
