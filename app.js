@@ -37,7 +37,6 @@ for (let item of items){
             moveAt(event.clientY);
 
             let thisEl = item;
-
             let prevEl = thisEl.previousElementSibling;
             let nextEl = thisEl.nextElementSibling;
 
@@ -76,6 +75,12 @@ for (let item of items){
                 nextContainer = (container.nextElementSibling && container.nextElementSibling.classList.contains('drag-list')) ?
                     container.nextElementSibling : null;
 
+                item.style.top = 0;
+                margin = item.getBoundingClientRect().y;
+
+                prevEl = null;
+                nextEl = item.nextElementSibling;
+
             } else if (prevContainer
                 && item.getBoundingClientRect().y < prevContainer.getBoundingClientRect().bottom){ //в верхний контейнер
                 prevContainer.appendChild(item);
@@ -84,6 +89,12 @@ for (let item of items){
                 container = prevContainer;
                 prevContainer = (container.previousElementSibling && container.previousElementSibling.classList.contains('drag-list')) ?
                     container.previousElementSibling : null;
+
+                item.style.top = 0;
+                margin = item.getBoundingClientRect().y;
+
+                prevEl = item.previousElementSibling;
+                nextEl = null;
             }
         }
 
@@ -96,8 +107,6 @@ for (let item of items){
             item.onmouseup = null;
             item.style.transition = 'all .3s ease'
             item.style.top = 0;
-
-            console.log(container.id);
         };
 
         //зануление обычного d&d
