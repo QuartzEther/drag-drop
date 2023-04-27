@@ -1,5 +1,5 @@
 const items = document.querySelectorAll(".drag-item")
-const containers = document.querySelectorAll(".drag-list")
+//const containers = document.querySelectorAll(".drag-list")
 
 const container = document.querySelector(".drag-list")
 
@@ -14,7 +14,7 @@ for (let item of items){
         item.style.position = 'relative';
         item.style.zIndex = 1000;
 
-        moveAt(event.pageY);
+        moveAt(event.clientY);
 
         // передвинуть элемент под координаты курсора
         function moveAt(pageY) {
@@ -22,7 +22,7 @@ for (let item of items){
         }
 
         function onMouseMove(event) {
-            moveAt(event.pageY);
+            moveAt(event.clientY);
 
             let thisEl = item;
 
