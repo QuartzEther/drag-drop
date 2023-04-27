@@ -18,7 +18,7 @@ body {
     margin-bottom: 30px;
     position: relative;
 
-    padding: 10px 0;
+    padding-top: 10px;
 }
 
 .drag-list_pink {
@@ -30,7 +30,7 @@ body {
     position: relative;
     font-family: Helvetica;
     height: 30px;
-    margin: 10px 10px 0 10px;
+    margin: 0 10px 10px 10px;
     padding: 10px;
     text-align: center;
     border: 1px solid rgba(0,0,0,.03);

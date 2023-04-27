@@ -77,10 +77,6 @@ for (let item of items){
 
                 item.style.top = 0;
                 margin = item.getBoundingClientRect().y;
-
-                prevEl = null;
-                nextEl = item.nextElementSibling;
-
             } else if (prevContainer
                 && item.getBoundingClientRect().y < prevContainer.getBoundingClientRect().bottom){ //в верхний контейнер
                 prevContainer.appendChild(item);
@@ -92,9 +88,6 @@ for (let item of items){
 
                 item.style.top = 0;
                 margin = item.getBoundingClientRect().y;
-
-                prevEl = item.previousElementSibling;
-                nextEl = null;
             }
         }
 
