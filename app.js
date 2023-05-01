@@ -3,6 +3,7 @@ const containers = document.querySelectorAll(".drag-list")
 const items = document.querySelectorAll(".drag-item")
 
 for (let item of items){
+
     let container = item.parentElement;
 
     let prevContainer = null;
@@ -18,7 +19,11 @@ for (let item of items){
     }
 
     let margin =  item.getBoundingClientRect().y; //закрепление позиции item сверху
-    item.onmousedown = function(event) { //отследить нажатие
+
+    item.addEventListener('touchstart', touchStart);
+
+    function touchStart (event){
+        event.preventDefault();
 
         margin =  item.getBoundingClientRect().y; //закрепление позиции item сверху
         item.style.transition = 'none'
@@ -26,86 +31,78 @@ for (let item of items){
         item.style.position = 'relative';
         item.style.zIndex = 1000;
 
-        moveAt(event.clientY);
+        let touch = event.targetTouches[0];
+        item.style.top = touch.clientY - margin - item.offsetHeight / 2 + 'px';
 
-        // передвинуть элемент под координаты курсора
-        function moveAt(pageY) {
-            item.style.top = pageY - margin - item.offsetHeight / 2 + 'px';
-        }
+        item.addEventListener('touchmove', touchMove);
+        item.addEventListener('touchend', touchEnd);
+    }
 
-        function onMouseMove(event) {
-            moveAt(event.clientY);
+    function touchMove(event) {
+        event.preventDefault();
 
-            let thisEl = item;
-            let prevEl = thisEl.previousElementSibling;
-            let nextEl = thisEl.nextElementSibling;
+        let touch = event.targetTouches[0];
+        item.style.top = touch.clientY - margin - item.offsetHeight / 2 + 'px';
 
-            //перемещение item
+        let thisEl = item;
+        let prevEl = thisEl.previousElementSibling;
+        let nextEl = thisEl.nextElementSibling;
 
-            //перемещение вниз
-            if (nextEl && item.getBoundingClientRect().y > nextEl.getBoundingClientRect().y){
-                container.insertBefore(nextEl, thisEl);
+        //перемещение item
 
-                nextEl.classList.add('animation-up');
-                nextEl.addEventListener("animationend", () =>{
-                    nextEl.classList.remove('animation-up')
-                }, false);
+        //перемещение вниз
+        if (nextEl && item.getBoundingClientRect().y > nextEl.getBoundingClientRect().y){
+            container.insertBefore(nextEl, thisEl);
 
-                item.style.top = 0;
-                margin = item.getBoundingClientRect().y;
+            nextEl.classList.add('animation-up');
+            nextEl.addEventListener("animationend", () =>{
+                nextEl.classList.remove('animation-up')
+            }, false);
 
-
-            } else if (prevEl && item.getBoundingClientRect().y < prevEl.getBoundingClientRect().y){ //вверх
-                container.insertBefore(thisEl, prevEl);
-
-                prevEl.classList.add('animation-down')
-                prevEl.addEventListener("animationend", () =>{
-                    prevEl.classList.remove('animation-down')
-                }, false);
-
-                item.style.top = 0;
-                margin = item.getBoundingClientRect().y;
-
-            } else if (nextContainer
-                && (item.getBoundingClientRect().bottom) > nextContainer.getBoundingClientRect().y){ //в нижний контейнер
-                nextContainer.prepend(item);
-
-                prevContainer = container;
-                container = nextContainer;
-                nextContainer = (container.nextElementSibling && container.nextElementSibling.classList.contains('drag-list')) ?
-                    container.nextElementSibling : null;
-
-                item.style.top = 0;
-                margin = item.getBoundingClientRect().y;
-            } else if (prevContainer
-                && item.getBoundingClientRect().y < prevContainer.getBoundingClientRect().bottom){ //в верхний контейнер
-                prevContainer.appendChild(item);
-
-                nextContainer = container;
-                container = prevContainer;
-                prevContainer = (container.previousElementSibling && container.previousElementSibling.classList.contains('drag-list')) ?
-                    container.previousElementSibling : null;
-
-                item.style.top = 0;
-                margin = item.getBoundingClientRect().y;
-            }
-        }
-
-        // перемещать по экрану
-        document.addEventListener('mousemove', onMouseMove);
-
-        //положить элемент, удалить более ненужные обработчики событий
-        document.onmouseup = function() {
-            document.removeEventListener('mousemove', onMouseMove);
-            item.onmouseup = null;
-            item.style.transition = 'all .3s ease'
             item.style.top = 0;
-        };
+            margin = item.getBoundingClientRect().y;
 
-        //зануление обычного d&d
-        item.ondragstart = function() {
-            return false;
-        };
-    };
 
+        } else if (prevEl && item.getBoundingClientRect().y < prevEl.getBoundingClientRect().y){ //вверх
+            container.insertBefore(thisEl, prevEl);
+
+            prevEl.classList.add('animation-down')
+            prevEl.addEventListener("animationend", () =>{
+                prevEl.classList.remove('animation-down')
+            }, false);
+
+            item.style.top = 0;
+            margin = item.getBoundingClientRect().y;
+
+        } else if (nextContainer
+            && (item.getBoundingClientRect().bottom) > nextContainer.getBoundingClientRect().y){ //в нижний контейнер
+            nextContainer.prepend(item);
+
+            prevContainer = container;
+            container = nextContainer;
+            nextContainer = (container.nextElementSibling && container.nextElementSibling.classList.contains('drag-list')) ?
+                container.nextElementSibling : null;
+
+            item.style.top = 0;
+            margin = item.getBoundingClientRect().y;
+        } else if (prevContainer
+            && item.getBoundingClientRect().y < prevContainer.getBoundingClientRect().bottom){ //в верхний контейнер
+            prevContainer.appendChild(item);
+
+            nextContainer = container;
+            container = prevContainer;
+            prevContainer = (container.previousElementSibling && container.previousElementSibling.classList.contains('drag-list')) ?
+                container.previousElementSibling : null;
+
+            item.style.top = 0;
+            margin = item.getBoundingClientRect().y;
+        }
+    }
+
+    function touchEnd (){
+        item.removeEventListener('touchmove', touchMove);
+        item.ontouchend = null;
+        item.style.transition = 'all .3s ease'
+        item.style.top = 0;
+    }
 }
