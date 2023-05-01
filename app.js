@@ -21,6 +21,7 @@ for (let item of items){
     let margin =  item.getBoundingClientRect().y; //закрепление позиции item сверху
 
     item.addEventListener('touchstart', touchStart);
+    item.addEventListener('mousedown', touchStart)
 
     function touchStart (event){
         event.preventDefault();
@@ -31,17 +32,25 @@ for (let item of items){
         item.style.position = 'relative';
         item.style.zIndex = 1000;
 
-        let touch = event.targetTouches[0];
-        item.style.top = touch.clientY - margin - item.offsetHeight / 2 + 'px';
+        if (event.targetTouches){
+            let touch = event.targetTouches[0];
+            item.style.top = touch.clientY - margin - item.offsetHeight / 2 + 'px';
 
-        item.addEventListener('touchmove', touchMove);
-        item.addEventListener('touchend', touchEnd);
+            document.addEventListener('touchmove', touchMove, {passive: false});
+            document.addEventListener('touchend', touchEnd);
+        } else {
+            item.style.top = event.clientY - margin - item.offsetHeight / 2 + 'px';
+
+            document.addEventListener('mousemove', touchMove);
+            document.addEventListener('mouseup', touchEnd);
+        }
     }
+
 
     function touchMove(event) {
         event.preventDefault();
 
-        let touch = event.targetTouches[0];
+        let touch = event.targetTouches? event.targetTouches[0]:event;
         item.style.top = touch.clientY - margin - item.offsetHeight / 2 + 'px';
 
         let thisEl = item;
@@ -100,9 +109,18 @@ for (let item of items){
     }
 
     function touchEnd (){
-        item.removeEventListener('touchmove', touchMove);
+        document.removeEventListener('touchmove', touchMove);
+        document.removeEventListener('mousemove', touchMove);
+
         item.ontouchend = null;
         item.style.transition = 'all .3s ease'
         item.style.top = 0;
     }
+
+    function onMouseUp() {
+        document.removeEventListener('mousemove', touchMove);
+        item.onmouseup = null;
+        item.style.transition = 'all .3s ease'
+        item.style.top = 0;
+    };
 }
