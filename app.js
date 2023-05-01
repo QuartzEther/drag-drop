@@ -116,11 +116,4 @@ for (let item of items){
         item.style.transition = 'all .3s ease'
         item.style.top = 0;
     }
-
-    function onMouseUp() {
-        document.removeEventListener('mousemove', touchMove);
-        item.onmouseup = null;
-        item.style.transition = 'all .3s ease'
-        item.style.top = 0;
-    };
 }
