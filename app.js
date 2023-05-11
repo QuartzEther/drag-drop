@@ -1,5 +1,4 @@
 const containers = document.querySelectorAll(".drag-list")
-
 const items = document.querySelectorAll(".drag-item")
 
 for (let item of items){
